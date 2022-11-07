@@ -1,0 +1,49 @@
+body, #root {
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.red-salvation {
+  background-image: linear-gradient(to top, #f43b47 0%, #453a94 100%);
+}
+
+.aqua-splash {
+  background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+}
+
+.spiky-naga {
+  background-image: linear-gradient(
+    to top,
+    #505285 0%,
+    #585e92 12%,
+    #65689f 25%,
+    #7474b0 37%,
+    #7e7ebb 50%,
+    #8389c7 62%,
+    #9795d4 75%,
+    #a2a1dc 87%,
+    #b5aee4 100%
+  );
+}
+
+.premium-dark {
+  background-image: linear-gradient(to right, #434343 0%, black 100%);
+}
+
+.jungle-day {
+  background-image: linear-gradient(45deg, #8baaaa 0%, #ae8b9c 100%);
+}

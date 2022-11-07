@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { AnimatePresence } from 'framer-motion';
+import { useEffect, useMemo } from "react";
+import { Toaster } from 'react-hot-toast';
+import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom';
+import AdminApp from './admin/AdminApp';
+import LoginSignUpModal from './components/modals/LoginSignUpModal';
+import { PublicLayout } from "./components/ui";
+import { ActorPage, ActorsPage, FavoritesPage, GenrePage, HomePage, LogoutPage, MoviesByGenrePage, SearchPage } from './pages';
+import MoviePage from './pages/MoviePage';
 
-function App() {
+const App = () => {
+  const [sp] = useSearchParams();
+  const { pathname } = useLocation();
+
+  const lsuModalOpen = useMemo(() => {
+    return sp.has('l') || sp.has('s');
+  }, [sp]);
+
+  useEffect(() => {
+    if (!pathname.includes('/cm')) require('./index.scss');
+    else require('./admin/admin.scss');
+  }, [pathname]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Toaster />
+      { lsuModalOpen && <LoginSignUpModal key="lsu-modal" /> }
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<PublicLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="browse">
+              <Route index element={<Navigate to="/" />} />
+              <Route path=":id" element={<MoviePage />} />
+            </Route>
+            <Route path="actors">
+              <Route index element={<ActorsPage />} />
+              <Route path=":id" element={<ActorPage />} />
+            </Route>
+            <Route path="genres">
+              <Route index element={<GenrePage />} />
+              <Route path=":id" element={<MoviesByGenrePage />} />
+            </Route>
+            <Route path="favorites" element={<FavoritesPage />} />
+          </Route>
+          <Route path="logout" element={<LogoutPage />} />
+          <Route path="cm/*" element={<AdminApp />} />
+        </Routes>
+      </AnimatePresence>
+    </>
   );
-}
+};
 
 export default App;
