@@ -4,14 +4,8 @@ import { createMemoryHistory } from 'history';
 import { Toaster } from 'react-hot-toast';
 import { Router } from 'react-router-dom';
 import { LoginForm } from "../components/modals/LoginSignUpModal";
-import * as API from '../utils/api';
-import { loginAdminResponse, loginErrorResponse, renderWithProviders } from "../utils/test-utils";
+import { renderWithProviders } from "../utils/test-utils";
 
-jest.mock("axios");
-jest.mock("framer-motion", () => ({
-  ...jest.requireActual("framer-motion"),
-  useReducedMotion: () => true,
-}));
 describe("Login Form", () => {
   afterAll(() => jest.resetAllMocks());
   const history = createMemoryHistory();
@@ -40,8 +34,6 @@ describe("Login Form", () => {
     const email = screen.getByTestId('email');
     const password = screen.getByTestId('password');
 
-    jest.spyOn<typeof API, any>(API, 'login').mockResolvedValueOnce(loginAdminResponse);
-
     userEvent.click(btn);
     expect(screen.getByText(/Please enter your email address/)).toBeInTheDocument();
     expect(email).toHaveFocus();
@@ -69,8 +61,6 @@ describe("Login Form", () => {
     const email = screen.getByTestId('email');
     const password = screen.getByTestId('password');
 
-    jest.spyOn<typeof API, any>(API, 'login').mockResolvedValueOnce(loginAdminResponse);
-
     await act(async () => {
       userEvent.type(email, 'test@email.com');
       userEvent.type(password, '123');
@@ -92,14 +82,12 @@ describe("Login Form", () => {
     const email = screen.getByTestId('email');
     const password = screen.getByTestId('password');
 
-    jest.spyOn<typeof API, any>(API, 'login').mockResolvedValueOnce(loginErrorResponse);
-
     await act(async () => {
-      userEvent.type(email, 'invalid@email.com');
-      userEvent.type(password, '123');
+      userEvent.type(email, 'test@email.com');
+      userEvent.type(password, '234');
       userEvent.click(btn);
     });
 
-    expect(screen.getByText(loginErrorResponse.message)).toBeInTheDocument();
+    expect(screen.getByText(/Invalid email or password./)).toBeInTheDocument();
   });
 });

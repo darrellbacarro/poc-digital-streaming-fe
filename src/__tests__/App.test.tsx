@@ -4,15 +4,9 @@ import { Router } from 'react-router-dom';
 import App from '../App';
 import { renderWithProviders } from "../utils/test-utils";
 
-jest.mock("axios");
-jest.mock('framer-motion', () => ({
-  ...jest.requireActual('framer-motion'),
-  useReducedMotion: () => true,
-}));
-// const mockedAxios = axios as jest.Mocked<typeof axios>;
 describe("App", () => {
+  const history = createMemoryHistory();
   test("should render the page for Guest User", () => {
-    const history = createMemoryHistory();
     renderWithProviders(
       <Router location={history.location} navigator={history}>
         <App />
@@ -24,7 +18,7 @@ describe("App", () => {
   });
 
   test("should open a login form dialog on ?l route", async () => {
-    const history = createMemoryHistory({ initialEntries: ['/?l'] });
+    history.replace('/?l');
     renderWithProviders(
       <Router location={history.location} navigator={history}>
         <App />
@@ -37,7 +31,7 @@ describe("App", () => {
   });
 
   test("should open a signup form dialog on ?s route", async () => {
-    const history = createMemoryHistory({ initialEntries: ['/?s'] });
+    history.replace('/?s');
     renderWithProviders(
       <Router location={history.location} navigator={history}>
         <App />

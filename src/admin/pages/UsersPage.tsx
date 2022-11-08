@@ -103,7 +103,7 @@ const UsersPage = () => {
       render: (value: string, data: User) => (
         <TableRowActions>
           <UserForm user={data} title="Edit User" onComplete={handleLoadUsers}>
-            <Button iconBefore={EditIcon} appearance="minimal" size="small">Edit</Button>
+            <Button data-testid="edit-btn" iconBefore={EditIcon} appearance="minimal" size="small">Edit</Button>
           </UserForm>
           <UserDeleteConfirm user={data} onComplete={handleLoadUsers}>
             <Button
@@ -124,7 +124,7 @@ const UsersPage = () => {
       <TableControls>
         <Heading size={600}>Users</Heading>
         <UserForm title='Add User' onComplete={handleLoadUsers}>
-          <Button iconBefore={PlusIcon} appearance="primary">Add User</Button>
+          <Button data-testid="add-user-btn" iconBefore={PlusIcon} appearance="primary">Add User</Button>
         </UserForm>
       </TableControls>
       <CustomTable

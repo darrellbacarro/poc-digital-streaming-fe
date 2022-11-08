@@ -284,7 +284,7 @@ const UserForm: FC<UserFormProps> = ({
             }}
             values={files}
           />
-          <Button visibility="hidden">Submit</Button>
+          <Button data-testid="user-form-submit" visibility="hidden">Submit</Button>
         </form>
       </Dialog>
       {cloneElement(children, {

@@ -51,7 +51,7 @@ export const doSearch = createAsyncThunk(
 
 export const publicLoadActors = createAsyncThunk(
   "public/publicLoadActors",
-  async (filter: { page: number; limit: number }) => {
+  async (filter?: { page: number; limit: number }) => {
     const res = await loadData(DataRoute.Actors, filter);
     return res.data;
   }
@@ -67,7 +67,7 @@ export const loadActorInfo = createAsyncThunk(
 
 export const publicLoadMovies = createAsyncThunk(
   "public/publicLoadMovies",
-  async (filter: { page: number; limit: number }) => {
+  async (filter?: { page?: number; limit?: number }) => {
     const res = await loadData(DataRoute.Movies, filter);
     return res.data;
   }

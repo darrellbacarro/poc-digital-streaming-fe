@@ -221,7 +221,7 @@ const MovieForm: FC<MovieFormProps> = ({
               <MultiGenreSelect />
             )}
           </FormField>
-          <Button visibility="hidden">Submit</Button>
+          <Button data-testid="movie-form-submit" visibility="hidden">Submit</Button>
         </form>
       </Dialog>
       {cloneElement(children, {

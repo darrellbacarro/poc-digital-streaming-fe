@@ -66,7 +66,7 @@ const thumbnailVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const ActorThumbnail: FC<ActorThumbnailProps> = ({ image, name, actorId }) => {
+export const ActorThumbnail: FC<ActorThumbnailProps> = ({ image, name, actorId }) => {
   const navigate = useNavigate();
   const handleClick = useCallback(() => {
     navigate(`/actors/${actorId}`);

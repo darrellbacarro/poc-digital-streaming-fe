@@ -3,17 +3,9 @@ import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import App from "../App";
 import { doLogin, doLogout, publicLoadMovies } from '../redux/slices';
-import * as API from '../utils/api';
-import { getMoviesResponse, loginAdminResponse, loginUserResponse, renderWithProviders } from "../utils/test-utils";
+import { renderWithProviders } from "../utils/test-utils";
 
-jest.mock("axios");
-jest.mock("framer-motion", () => ({
-  ...jest.requireActual("framer-motion"),
-  useReducedMotion: () => true,
-}));
 describe("HomePage", () => {
-  afterAll(() => jest.resetAllMocks());
-
   test("should render the page with movies as Guest", async () => {
     const history = createMemoryHistory();
     const { store } = renderWithProviders(
@@ -22,13 +14,10 @@ describe("HomePage", () => {
       </Router>
     );
 
-    jest.spyOn<typeof API, any>(API, 'loadData').mockResolvedValueOnce(getMoviesResponse);
-
     await act(async () => {
-      await store.dispatch(publicLoadMovies({ page: 1, limit: 20 }));
+      await store.dispatch(publicLoadMovies());
     });
-    
-    expect(store.getState().public.movies.items.length).toBe(getMoviesResponse.data.items.length);
+    expect(store.getState().public.movies.items.length).toBeGreaterThan(0);
   });
 
   test("should allow login/logout as USER", async () => {
@@ -39,14 +28,14 @@ describe("HomePage", () => {
       </Router>
     );
 
-    jest.spyOn<typeof API, any>(API, 'login').mockResolvedValueOnce(loginUserResponse);
-
     await act(async () => {
-      await store.dispatch(doLogin({ email: '', password: '' }));
+      await store.dispatch(doLogin({ email: 'test@email.com ', password: '123' }));
     });
     
-    expect(store.getState().session.userData).not.toBeNull();
-    expect(screen.getByText(loginUserResponse.data.user.fullname)).toBeInTheDocument();
+    const user = store.getState().session.userData;
+
+    expect(user).not.toBeNull();
+    expect(user?.role).toBe('USER');
 
     await act(async () => {
       await store.dispatch(doLogout());
@@ -63,17 +52,14 @@ describe("HomePage", () => {
       </Router>
     );
 
-    jest.spyOn<typeof API, any>(API, 'login').mockResolvedValueOnce(loginAdminResponse);
-
     await act(async () => {
-      await store.dispatch(doLogin({ email: '', password: '' }));
+      await store.dispatch(doLogin({ email: 'admin@email.com', password: '123' }));
     });
 
     const session = store.getState().session;
     
     expect(session.userData).not.toBeNull();
     expect(session.token).not.toBeNull();
-    expect(screen.getByText(loginAdminResponse.data.user.fullname)).toBeInTheDocument();
     expect(session.userData?.role).toBe('ADMIN');
     expect(screen.getByText(/Admin Console/)).toBeInTheDocument();
 

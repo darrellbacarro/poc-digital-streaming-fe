@@ -94,7 +94,7 @@ const MoviesPage = () => {
       <TableControls>
         <Heading size={600}>Movies</Heading>
         <MovieForm title='Add Movie' onComplete={handleLoadMovies}>
-          <Button iconBefore={PlusIcon} appearance="primary">Add Movie</Button>
+          <Button data-testid="add-movie-btn" iconBefore={PlusIcon} appearance="primary">Add Movie</Button>
         </MovieForm>
       </TableControls>
       <CustomTable

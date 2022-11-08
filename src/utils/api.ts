@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import { Actor, Genre, Movie, Review, User } from '../redux/models';
 import { getCookie } from './helpers';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.baseURL = process.env.REACT_APP_API_URL ?? 'http://localhost:3000';
 
-type ApiData<T = any> = {
+export type ApiData<T = any> = {
   success: boolean;
   message: string;
   data: T;
