@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  createUser,
   DataRoute,
   getActorInfo,
   getFavorites,
@@ -10,7 +11,7 @@ import {
   submitReview
 } from "../../utils/api";
 import { getRandomInt } from "../../utils/helpers";
-import { Actor, Genre, Movie, Review } from "../models";
+import { Actor, Genre, Movie, Review, User } from "../models";
 
 export type PublicState = {
   movies: { total: number; items: Movie[] };
@@ -122,6 +123,11 @@ export const loadFavoriteMovies = createAsyncThunk(
     return res.data;
   }
 );
+
+export const signUp = createAsyncThunk("public/signUp", async (data: Partial<User>) => {
+  const res = await createUser(data);
+  return res;
+});
 
 export const publicSlice = createSlice({
   name: "public",

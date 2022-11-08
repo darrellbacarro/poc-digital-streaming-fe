@@ -17,6 +17,9 @@ export const doLogin = createAsyncThunk(
   "session/login",
   async (data: { email: string; password: string }) => {
     const res = await login(data.email, data.password);
+
+    if (!res.success) throw new Error(res.message);
+
     return res;
   }
 );

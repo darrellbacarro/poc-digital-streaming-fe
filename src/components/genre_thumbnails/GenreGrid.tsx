@@ -68,7 +68,7 @@ export const GenreGrid: FC<GenreGridProps> = ({ genres = [] }) => {
     <GenreGridStyled>
       {
         genres.map((genre) => (
-          <GenreItem genreId={genre.id} genre={genre.title ?? ''} gradient={genre.gradient as any} />
+          <GenreItem key={genre.id} genreId={genre.id} genre={genre.title ?? ''} gradient={genre.gradient as any} />
         ))
       }
     </GenreGridStyled>

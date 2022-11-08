@@ -15,6 +15,7 @@ import { cloneElement, FC, useCallback, useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux.hook";
 import { User } from "../../redux/models";
 import { doCreateUser, doUpdateUser } from "../../redux/slices";
+import { validateEmailFromApi } from "../../utils/api";
 
 type UserFormProps = {
   children: any;
@@ -131,6 +132,21 @@ const UserForm: FC<UserFormProps> = ({
     [isFieldTouched, validateFields, user]
   );
 
+  const validateEmail = useCallback(
+    async (_rule: any, value: any, callback: any) => {
+      const res = await validateEmailFromApi(value, user?.id);
+      console.log(user);
+      if (res?.success) {
+        if (res?.data?.valid !== true) {
+          callback("Email already in use");
+        }
+        return;
+      }
+      callback();
+    },
+    [user, open]
+  );
+
   useEffect(() => {
     if (!open) resetFields();
   }, [open]);
@@ -170,6 +186,7 @@ const UserForm: FC<UserFormProps> = ({
             rules: [
               { required: true, message: "Email is required" },
               { type: "email", message: "Email is invalid" },
+              { validator: validateEmail },
             ],
             initialValue: "",
           })(

@@ -2,7 +2,15 @@ import styled from "@emotion/styled";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
-import { FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import toast from "react-hot-toast";
 import { Rating } from "react-simple-star-rating";
 import { RATING_STAR_SIZE } from "../../constants";
@@ -118,7 +126,7 @@ const ReviewEmptyStyled = styled.div`
 const ReviewEmpty = () => {
   return (
     <ReviewEmptyStyled>
-      <FontAwesomeIcon size="5x" icon={solid('comment-dots')} />
+      <FontAwesomeIcon size="5x" icon={solid("comment-dots")} />
       <h3>No reviews yet</h3>
     </ReviewEmptyStyled>
   );
@@ -159,7 +167,7 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
   const {
     session: { token, userData },
     public: {
-      currentMovieReviews: { total, items = [] },
+      currentMovieReviews: { items = [] },
       currentMovie,
     },
   } = useAppSelector((state) => state);
@@ -173,6 +181,19 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
     return !!token;
   }, [token]);
 
+  const userHasReview = useMemo(() => {
+    if (!loggedIn) return false;
+    return items.some((review) => review.user.userId === userData?.id);
+  }, [items, userData, loggedIn]);
+
+  const reviewFormWarning = useMemo(() => {
+    if (!userData) return "You must be logged in to write a review";
+    if (userData?.role === 'ADMIN') return "Admins cannot write reviews";
+    if (userHasReview) return "You have already written a review";
+
+    return null;
+  }, [userData, userHasReview]);
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -185,7 +206,7 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
           content,
           rating,
           user: {
-            userId: userData?.userId,
+            userId: userData?.id,
             fullname: userData?.fullname,
             photo: userData?.photo,
           },
@@ -225,7 +246,7 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
       </ReviewsContainerStyled>
       <ReviewForm ref={formRef} onSubmit={handleSubmit}>
         <h3>Write a review</h3>
-        {loggedIn && userData?.role !== "ADMIN" ? (
+        {!reviewFormWarning ? (
           <>
             <div>
               <span>Your Rating: </span>
@@ -246,11 +267,7 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
             <UIButton>Submit Review</UIButton>
           </>
         ) : (
-          <i>
-            {userData?.role === "ADMIN"
-              ? "Admins cannot write reviews"
-              : "You must be logged in to write a review"}
-          </i>
+          <i>{ reviewFormWarning }</i>
         )}
       </ReviewForm>
     </ReviewsSectionStyled>

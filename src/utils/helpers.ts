@@ -20,14 +20,14 @@ export const getCookie = (name: string): string | null | undefined => {
 };
 
 /**
- * A custom error class that is thrown when a validation fails.           
+ * A custom error class that can be thrown when a validation fails.           
  * @param {string} message - the error message.           
- * @param {string} field - the field that the error is thrown for.           
+ * @param {T} field - the field that failed validation.           
  */
-export class ValidationError extends Error {
-  field: string;
+export class ValidationError<T = string> extends Error {
+  field: T;
 
-  constructor(message: string, field: string) {
+  constructor(message: string, field: T) {
     super(message);
     this.field = field;
   }
@@ -50,11 +50,11 @@ export class ValidationError extends Error {
  * @returns {string} - the number of hours and minutes in the format "hh:mm"           
  */
 export function timeConvert(n: number) {
-  var num = n;
-  var hours = (num / 60);
-  var rhours = Math.floor(hours);
-  var minutes = (hours - rhours) * 60;
-  var rminutes = Math.round(minutes);
+  const num = n;
+  const hours = (num / 60);
+  const rhours = Math.floor(hours);
+  const minutes = (hours - rhours) * 60;
+  const rminutes = Math.round(minutes);
   return `${rhours}h ${rminutes}m`;
 }
 
@@ -90,3 +90,25 @@ export function getRandomInt(min: number, max: number): number {
       return getRandomInt(min, max);
   return min + (byteArray[0] % range);
 }
+
+/**
+ * Sleep for the given number of milliseconds.           
+ * @param {number} ms - the number of milliseconds to sleep for.           
+ * @returns None           
+ */
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const parseSignUpFieldLabels = (field: string): string => {
+  switch (field) {
+    case 'fullname':
+      return 'Fullname';
+    case 'email':
+      return 'Email Address';
+    case 'password':
+      return 'Password';
+    case 'cpassword':
+      return 'Confirm Password';
+    default:
+      return '';
+  }
+};

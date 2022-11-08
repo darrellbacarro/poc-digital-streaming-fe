@@ -29,6 +29,11 @@ const FavoriteButton: FC<FavoriteButtonProps> = ({ movieId }) => {
       return;
     }
 
+    if (userData.role === 'ADMIN') {
+      toast.error('Admins cannot add movies to their favorites.');
+      return;
+    }
+
     await dispatch(doUpdateFavorites({ movieId, isFavorite: !isFavorite }));
   }, [dispatch, isFavorite, movieId, userData]);
 

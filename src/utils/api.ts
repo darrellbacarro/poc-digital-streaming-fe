@@ -440,3 +440,20 @@ export const getLoggedInUserData = async (): Promise<ApiData> => {
   const res = await rqst<ApiData>(`/users/me`);
   return res;
 };
+
+/**
+ * Validates an email address.       
+ * @param {string} email - the email address to validate       
+ * @param {string} [id] - the id of the user to validate       
+ * @returns {ApiData} - the response from the server       
+ */
+export const validateEmailFromApi = async (email: string, id?: string): Promise<ApiData> => {
+  const payload: any = { email };
+  if (id) payload['id'] = id;
+
+  const res = await rqst<ApiData>(`/validate-email`, {
+    method: 'POST',
+    data: payload,
+  });
+  return res;
+};

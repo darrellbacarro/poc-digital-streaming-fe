@@ -15,10 +15,6 @@ const ReviewsPage = () => {
   const { total, items: reviews } = admin.reviews;
   const dispatch = useAppDispatch();
 
-  const handleLoadReviews = useCallback(() => {
-    dispatch(loadReviews(filter));
-  }, [filter, dispatch]);
-
   const handleQuickUpdate = useCallback(async (id: string, data: string) => {
     try {
       const ret = await dispatch(doReviewApproval({ id, approved: data === "APPROVED" })).unwrap();

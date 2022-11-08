@@ -77,7 +77,7 @@ const PublicLayout = () => {
             if (item === null) return <SizedBox key={index} />;
 
             if (item.label === 'Favorites' && (!userData || userData.role === 'ADMIN'))
-              return <SizedBox height={1} />
+              return <SizedBox key={index} height={1} />
              
             const mainPathMatch = matchPath(item.to, pathname);
             const extraPathMatch = item.extraPath && matchPath(item.extraPath, pathname);

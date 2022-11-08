@@ -48,6 +48,7 @@ type FormInputProps = {
   label?: string;
   autoFocus?: boolean;
   variants?: Variants;
+  value: string;
 };
 
 const FormInputStyled = styled(motion.div)`
@@ -99,16 +100,19 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({
   label,
   autoFocus,
   variants,
+  value,
 }, ref) => {
   return (
     <FormInputStyled variants={variants}>
       { !!label && <label htmlFor={id}>{ label }</label> }
       <input
+        data-testid={id}
         autoFocus={autoFocus}
         ref={ref}
         type={type}
         placeholder={placeholder}
         onChange={onChange}
+        value={value}
         key={id}
         id={id}
         name={id}

@@ -29,11 +29,9 @@ const ActorForm: FC<ActorFormProps> = ({
 }) => {
   const {
     getFieldDecorator,
-    getFieldValue,
     validateFields,
     errors,
     errorsArr,
-    isFieldTouched,
     resetFields,
     setFieldsValue,
   } = useForm<Partial<Actor>>();

@@ -1,5 +1,6 @@
 import { Pane } from 'evergreen-ui';
 import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import AdminLayout from '../components/ui/AdminLayout';
 import { useAppSelector } from '../hooks/redux.hook';
@@ -14,7 +15,10 @@ const AdminApp = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userData?.role !== 'ADMIN') navigate('/');
+    if (userData?.role !== 'ADMIN') {
+      navigate('/', { replace: true });
+      toast.error('Unauthorized access', { duration: 1500, style: { backgroundColor: '#333', color: '#fff' } });
+    }
   }, [userData]);
 
   return (
