@@ -3,13 +3,12 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { matchPath, Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { ReactComponent as Logo } from '../../assets/images/logo.svg';
+import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { DEFAULT_AVATAR } from '../../constants';
 import { useHistoryStack } from '../../hooks/history.hook';
 import { useAppSelector } from '../../hooks/redux.hook';
 import CustomSearch from '../input/CustomSearch';
-import { Container, ContainerHeader, HeaderButton, HeaderControlsContainer, SideBar, SideBarItem, SizedBox, UIButton, UserAvatar, UserAvatarContainer } from '../layout';
+import { Container, ContainerHeader, HeaderButton, HeaderControlsContainer, UserAvatar, UserAvatarContainer } from '../layout';
 
 type SidebarItemData = {
   icon: IconDefinition;
@@ -70,7 +69,7 @@ const PublicLayout = () => {
 
   return (
     <Container>
-      <SideBar>
+      {/* <SideBar>
         <Logo width={150} height={60} />
         {
           sidebarItems.map((item, index) => {
@@ -116,7 +115,7 @@ const PublicLayout = () => {
             </SideBarItem>
           )
         }
-      </SideBar>
+      </SideBar> */}
       <ContainerHeader className={clsx({ solid: scrolled })}>
         <HeaderControlsContainer>
           {

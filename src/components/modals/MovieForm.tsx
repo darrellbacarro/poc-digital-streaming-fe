@@ -47,10 +47,9 @@ const MovieForm: FC<MovieFormProps> = ({
     try {
       setLoading(true);
 
+      const values = await validateFields();
       if (!poster && !movie) throw new Error("Poster is required");
       if (!backdrop && !movie) throw new Error("Backdrop is required");
-
-      const values = await validateFields();
       const payload: any = {...values};
 
       if (poster) payload.poster = poster;
@@ -104,7 +103,7 @@ const MovieForm: FC<MovieFormProps> = ({
               label="Title"
               placeholder="Title"
               name="title"
-              isInvalid={!!errors.title}
+              
               validationMessage={
                 !!errors.title && errors.title[0].message
               }
@@ -119,7 +118,7 @@ const MovieForm: FC<MovieFormProps> = ({
               label="Plot"
               placeholder="Plot"
               name="plot"
-              isInvalid={!!errors.plot}
+              
               validationMessage={
                 !!errors.plot && errors.plot[0].message
               }
@@ -136,7 +135,7 @@ const MovieForm: FC<MovieFormProps> = ({
               placeholder="Cost"
               name="cost"
               type="number"
-              isInvalid={!!errors.cost}
+              
               validationMessage={!!errors.cost && errors.cost[0].message}
             />
           )}
@@ -151,7 +150,7 @@ const MovieForm: FC<MovieFormProps> = ({
               placeholder="Release Year"
               name="release_year"
               type="number"
-              isInvalid={!!errors.release_year}
+              
               validationMessage={!!errors.release_year && errors.release_year[0].message}
             />
           )}
@@ -165,7 +164,6 @@ const MovieForm: FC<MovieFormProps> = ({
               label="Runtime"
               placeholder="Runtime"
               name="runtime"
-              isInvalid={!!errors.runtime}
               validationMessage={!!errors.runtime && errors.runtime[0].message}
             />
           )}
@@ -201,7 +199,7 @@ const MovieForm: FC<MovieFormProps> = ({
             marginBottom={24}
             label="Actors"
             name="actors"
-            isInvalid={!!errors.actors}
+            
             validationMessage={!!errors.actors && errors.actors[0].message}>
             {getFieldDecorator("actors", {
               rules: [{ required: !movie, message: "Actors list is required" }],
@@ -213,7 +211,7 @@ const MovieForm: FC<MovieFormProps> = ({
           <FormField
             label="Genres"
             name="genres"
-            isInvalid={!!errors.genres}
+            
             validationMessage={!!errors.genres && errors.genres[0].message}>
             {getFieldDecorator("genres", {
               initialValue: [],

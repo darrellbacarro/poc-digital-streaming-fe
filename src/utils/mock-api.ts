@@ -20,7 +20,7 @@ export const server = setupServer(
               cost: 185000000,
               release_year: 2021,
               runtime: 132,
-              plot: "Supervillains Harley Quinn, Bloodsport, Peacemaker and a collection of nutty cons at Belle Reve prison join the super-secret, super-shady Task Force X as they are dropped off at the remote, enemy-infused island of Corto Maltese.",
+              plot: "Supervillains Harley Quinn, Bloodsport, ...",
               backdrop:
                 "https://image.tmdb.org/t/p/original/jlGmlFOcfo8n5tURmhC7YVd4Iyy.jpg",
               genres: [],
@@ -34,7 +34,7 @@ export const server = setupServer(
               cost: 29000000,
               release_year: 2007,
               runtime: 94,
-              plot: "Demons that once almost destroyed the world, are revived by someone. To prevent the world from being destroyed, the demon has to be sealed and the only one who can do it is the shrine maiden Shion from the country of demons, who has two powers; one is sealing demons and the other is predicting the deaths of humans. This time Naruto's mission is to guard Shion, but she predicts Naruto's death. The only way to escape it, is to get away from Shion, which would leave her unguarded, then the demon, whose only goal is to kill Shion will do so, thus meaning the end of the world. Naruto decides to challenge this \"prediction of death.\"",
+              plot: "Demons that once a...",
               backdrop:
                 "https://image.tmdb.org/t/p/original/mUC2BS04DlszdqJQ9vz9MFuPiDd.jpg",
               genres: [],
@@ -51,8 +51,7 @@ export const server = setupServer(
       success: true,
       message: "Successfully logged in",
       data: {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjgwMWMzMDFhMzc4OTljNWE2ZTMzYSIsImVtYWlsIjoidXNlcjFAZW1haWwuY29tIiwiaWF0IjoxNjY3ODgyMTE4LCJleHAiOjE2Njc5MDM3MTh9.DiiLNEIEiPHAYAyTt6h85jBrBKb0yS3Ly7LGsT76UJU",
+        token: "token",
         user: {
           id: "636801c301a37899c5a6e33a",
           email: "user1@email.com",
@@ -82,7 +81,13 @@ export const server = setupServer(
     return res(ctx.json(responseJson));
   }),
   rest.post(`${BASE_URL}/users/register`, async (req, res, ctx) => {
-    const { fullname } = await req.json();
+    let fullname = "Test User";
+
+    try {
+      const { fullname: fn } = await req.json();
+      fullname = fn;
+    } catch (e) {}
+
     let response: any = {
       success: true,
       message: "Registration successful!",
@@ -141,7 +146,7 @@ export const server = setupServer(
               birthdate: "1992-01-19",
               photo:
                 "https://storage.googleapis.com/poc-app-3eca2.appspot.com/logan1844e8954ca.jpeg",
-              bio: "Logan Wade Lerman is an American actor. He is known for playing the title role in the fantasy-adventure Percy Jackson films. He appeared in commercials in the mid-1990s, before starring in the series Jack & Bobby and the movies The Butterfly Effect and Hoot.",
+              bio: "Logan Wade Lerman is an...",
             },
           ],
         },
@@ -249,5 +254,175 @@ export const server = setupServer(
         data: null,
       })
     );
-  })
+  }),
+  rest.get(`${BASE_URL}/actors/:id`, async (req, res, ctx) => {
+    return res(
+      ctx.json({
+        success: true,
+        message: "Actor retrieved successfully!",
+        data: {
+          id: "63673d13bc59e15587e887b0",
+          firstname: "Keanu",
+          lastname: "Reeves",
+          gender: "M",
+          birthdate: "1976-01-01",
+          photo:
+            "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Frame%2011844b468d2d.png",
+          bio: "Lorem ipsum",
+          movies: [
+            {
+              _id: "6369f804bb253e56176a466f",
+              title: "A Haunted House 2",
+              poster:
+                "https://storage.googleapis.com/poc-app-3eca2.appspot.com/A-Haunted-House-2-poster18455f0ca7f.jpg",
+              cost: 4000000,
+              release_year: 2014,
+              runtime: 100,
+              plot: "After exorcising the demons of his ex-, Malcolm starts afresh with his new girlfriend and her two children. After moving into their dream home, Malcolm is once again plagued by bizarre paranormal events.",
+              backdrop:
+                "https://storage.googleapis.com/poc-app-3eca2.appspot.com/A-Haunted-House-2-backdrop18455f0ca87.jpg",
+              genres: [
+                {
+                  id: "63684b11ef05a840a058d1f7",
+                  title: "Horror",
+                  gradient: "aqua-splash",
+                },
+                {
+                  id: "6368d7e92bc63fa1e1b4cc67",
+                  title: "Romance",
+                  gradient: "red-salvation",
+                },
+                {
+                  id: "63684ba4c7191750cc4af689",
+                  title: "Sci-Fi",
+                  gradient: "spiky-naga",
+                },
+              ],
+            },
+          ],
+          totalMovies: 1,
+        },
+      })
+    );
+  }),
+  rest.patch(`${BASE_URL}/reviews/:id/approval`, async (req, res, ctx) => {
+    return res(
+      ctx.json({
+        success: true,
+        message: "Review approval updated.",
+      })
+    );
+  }),
+  rest.get(`${BASE_URL}/reviews`, async (req, res, ctx) => {
+    return res(
+      ctx.json({
+        success: true,
+        message: "Reviews retrieved successfully!",
+        data: {
+          total: 5,
+          items: [
+            {
+              _id: "636768cd403dad314baf866a",
+              content: "This is amazing",
+              rating: 4,
+              approved: true,
+              user: {
+                userId: "63663b25c3ee4265239477ce",
+                fullname: "Jane Doe",
+                photo:
+                  "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Image184475cf0ec.png",
+              },
+              movie: {
+                movieId: "6368a3cddcd1a9dc620a3c1b",
+                title: "Test Movie",
+                poster:
+                  "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Frame%2011844b51eca8.png",
+              },
+            },
+            {
+              _id: "6367996bc4c52675206b18da",
+              content: "This is amazing",
+              rating: 5,
+              approved: false,
+              user: {
+                userId: "63663b25c3ee4265239477ce",
+                fullname: "Jane Doe",
+                photo:
+                  "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Image184475cf0ec.png",
+              },
+              movie: {
+                movieId: "6368a3cddcd1a9dc620a3c1b",
+                title: "Test Movie",
+                poster:
+                  "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Frame%2011844b51eca8.png",
+              },
+            },
+            {
+              _id: "636799a7a6881675bc7dc9f9",
+              content: "This is amazing",
+              rating: 3,
+              approved: true,
+              user: {
+                userId: "63663b25c3ee4265239477ce",
+                fullname: "Jane Doe",
+                photo:
+                  "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Image184475cf0ec.png",
+              },
+              movie: {
+                movieId: "6368a3cddcd1a9dc620a3c1b",
+                title: "Test Movie",
+                poster:
+                  "https://storage.googleapis.com/poc-app-3eca2.appspot.com/Frame%2011844b51eca8.png",
+              },
+              postedAt: "2022-11-06T11:25:27.945Z",
+            },
+            {
+              _id: "6368c3522bc63fa1e1b4cc66",
+              content:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+              rating: 4.5,
+              approved: true,
+              user: {
+                fullname: "User 1",
+                userId: "636801c301a37899c5a6e33a",
+              },
+              movie: {
+                movieId: "6368a413dcd1a9dc620a3c4c",
+                title: "The Purge: Election Year",
+                poster:
+                  "https://image.tmdb.org/t/p/original/dx5pKJpGbJc9xrFQ8UR1XrrqmPj.jpg",
+              },
+              postedAt: "2022-11-07T08:35:30.557Z",
+            },
+            {
+              _id: "6369f4f0bb253e56176a466c",
+              content: "This is an example review for this movie",
+              rating: 5,
+              approved: true,
+              user: {
+                userId: "636801c301a37899c5a6e33a",
+                fullname: "User 1",
+              },
+              movie: {
+                movieId: "6368a3cddcd1a9dc620a3c1c",
+                title: "Naruto Shippuden the Movie",
+                poster:
+                  "https://image.tmdb.org/t/p/original/vDkct38sSFSWJIATlfJw0l3QOIR.jpg",
+              },
+              postedAt: "2022-11-08T06:19:28.482Z",
+            },
+          ],
+        },
+      })
+    );
+  }),
+  rest.all('*', async (req, res, ctx) => {
+    return res(
+      ctx.json({
+        success: true,
+        message: "Successful request",
+        data: {},
+      })
+    );
+  }),
 );

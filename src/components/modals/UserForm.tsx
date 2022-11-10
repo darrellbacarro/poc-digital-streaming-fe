@@ -1,11 +1,6 @@
 import {
   Button,
-  Dialog,
-  FileCard,
-  FileRejection,
-  FileUploader,
-  MimeType,
-  SelectField,
+  Dialog, SelectField,
   TextInputField,
   toaster
 } from "evergreen-ui";
@@ -16,6 +11,7 @@ import { useAppDispatch } from "../../hooks/redux.hook";
 import { User } from "../../redux/models";
 import { doCreateUser, doUpdateUser } from "../../redux/slices";
 import { validateEmailFromApi } from "../../utils/api";
+import CustomFileInput from "../input/CustomFileInput";
 
 type UserFormProps = {
   children: any;
@@ -51,54 +47,49 @@ const UserForm: FC<UserFormProps> = ({
   const dispatch = useAppDispatch();
 
   const [files, setFiles] = useState<File[]>([]);
-  const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
-  const handleChange = useCallback((files: File[]) => setFiles([files[0]]), []);
-  const handleRejected = useCallback(
-    (fileRejections: FileRejection[]) => setFileRejections([fileRejections[0]]),
-    []
+
+  const handleConfirm = useCallback(
+    async (e: any) => {
+      if (typeof e.preventDefault === "function") {
+        e.preventDefault();
+      }
+
+      try {
+        setLoading(true);
+        const values = await validateFields();
+
+        const payload: any = {
+          ..._.omit(values, ["confirmPassword"]),
+          enabled: true,
+          approved: true,
+        };
+
+        if (files.length > 0) {
+          payload.photo = files[0];
+        }
+
+        let ret = null;
+        if (user) {
+          ret = await dispatch(
+            doUpdateUser({ id: user.id, user: payload })
+          ).unwrap();
+        } else {
+          ret = await dispatch(doCreateUser(payload)).unwrap();
+        }
+
+        if (!ret?.success) throw new Error(ret?.message);
+
+        toaster.success(ret?.message, { duration: 1 });
+        setOpen(false);
+        onComplete();
+      } catch (e: any) {
+        toaster.danger(e?.message ?? e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [validateFields, setOpen, setLoading, onComplete, dispatch, user, files]
   );
-  const handleRemove = useCallback(() => {
-    setFiles([]);
-    setFileRejections([]);
-  }, []);
-
-  const handleConfirm = useCallback(async (e: any) => {
-    if (typeof e.preventDefault === "function") {
-      e.preventDefault();
-    }
-
-    try {
-      setLoading(true);
-      const values = await validateFields();
-
-      const payload: any = {
-        ..._.omit(values, ["confirmPassword"]),
-        enabled: true,
-        approved: true,
-      };
-
-      if (files.length > 0) {
-        payload.photo = files[0];
-      }
-
-      let ret = null;
-      if (user) {
-        ret = await dispatch(doUpdateUser({ id: user.id, user: payload })).unwrap();
-      } else {
-        ret = await dispatch(doCreateUser(payload)).unwrap();
-      }
-
-      if (!ret?.success) throw new Error(ret?.message);
-
-      toaster.success(ret?.message, { duration: 1 });
-      setOpen(false);
-      onComplete();
-    } catch (e: any) {
-      toaster.danger(e?.message ?? e);
-    } finally {
-      setLoading(false);
-    }
-  }, [validateFields, setOpen, setLoading, onComplete, dispatch, user, files]);
 
   const compareToFirstPassword = useCallback(
     (_rule: any, value: any, callback: any) => {
@@ -127,7 +118,6 @@ const UserForm: FC<UserFormProps> = ({
         validateFields(["confirmPassword"], { force: true });
       }
       callback();
-
     },
     [isFieldTouched, validateFields, user]
   );
@@ -135,7 +125,6 @@ const UserForm: FC<UserFormProps> = ({
   const validateEmail = useCallback(
     async (_rule: any, value: any, callback: any) => {
       const res = await validateEmailFromApi(value, user?.id);
-      console.log(user);
       if (res?.success) {
         if (res?.data?.valid !== true) {
           callback("Email already in use");
@@ -176,7 +165,6 @@ const UserForm: FC<UserFormProps> = ({
               label="Fullname"
               placeholder="Fullname"
               name="fullname"
-              isInvalid={!!errors.fullname}
               validationMessage={
                 !!errors.fullname && errors.fullname[0].message
               }
@@ -194,7 +182,6 @@ const UserForm: FC<UserFormProps> = ({
               label="Email Address"
               placeholder="Email Address"
               name="email"
-              isInvalid={!!errors.email}
               validationMessage={!!errors.email && errors.email[0].message}
             />
           )}
@@ -210,11 +197,9 @@ const UserForm: FC<UserFormProps> = ({
               placeholder="Password"
               name="password"
               type="password"
-              isInvalid={!!errors.password}
               validationMessage={
                 !!errors.password && errors.password[0].message
               }
-              
             />
           )}
           {getFieldDecorator("confirmPassword", {
@@ -229,7 +214,6 @@ const UserForm: FC<UserFormProps> = ({
               placeholder="Confirm Password"
               name="confirm-password"
               type="password"
-              isInvalid={!!errors.confirmPassword}
               validationMessage={
                 !!errors.confirmPassword && errors.confirmPassword[0].message
               }
@@ -243,48 +227,22 @@ const UserForm: FC<UserFormProps> = ({
               label="User Role"
               placeholder="User Role"
               name="role"
-              isInvalid={!!errors.role}
-              validationMessage={
-                !!errors.role && errors.role[0].message
-              }>
+              validationMessage={!!errors.role && errors.role[0].message}
+            >
               <option value="ADMIN">Administrator</option>
               <option value="USER">User</option>
             </SelectField>
           )}
-          <FileUploader
+          <CustomFileInput
+            onChange={(files) => setFiles(files)}
             label="User Photo"
             description="You can upload 1 file. File can be up to 8 MB."
-            maxSizeInBytes={8 * 1024 ** 2}
             maxFiles={1}
-            acceptedMimeTypes={[
-              MimeType.jpeg,
-              MimeType.png,
-              MimeType.gif,
-              MimeType.svg,
-            ]}
-            onChange={handleChange}
-            onRejected={handleRejected}
-            renderFile={(file) => {
-              const { name, size, type } = file;
-              const fileRejection = fileRejections.find(
-                (fileRejection: any) => fileRejection.file === file
-              );
-              const { message } = fileRejection || {};
-              return (
-                <FileCard
-                  key={name}
-                  isInvalid={fileRejection != null}
-                  name={name}
-                  onRemove={handleRemove}
-                  sizeInBytes={size}
-                  type={type}
-                  validationMessage={message}
-                />
-              );
-            }}
-            values={files}
+            id="user-photo"
           />
-          <Button data-testid="user-form-submit" visibility="hidden">Submit</Button>
+          <Button data-testid="user-form-submit" visibility="hidden">
+            Submit
+          </Button>
         </form>
       </Dialog>
       {cloneElement(children, {

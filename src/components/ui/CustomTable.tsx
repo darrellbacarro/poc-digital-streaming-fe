@@ -83,7 +83,7 @@ const CustomTable: FC<TableProps> = ({
                 <Table.Row key={index} height={36}>
                   {
                     columns.map((column) => {
-                      const cellKey = row[column.key];
+                      const cellKey = `${column.key}-${index}`;
                       if (column.render) {
                         return (
                           <Table.Cell key={cellKey}>

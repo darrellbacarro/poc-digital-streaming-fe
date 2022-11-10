@@ -1,30 +1,45 @@
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useMemo } from "react";
-import { Toaster } from 'react-hot-toast';
-import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom';
-import AdminApp from './admin/AdminApp';
-import LoginSignUpModal from './components/modals/LoginSignUpModal';
+import { Toaster } from "react-hot-toast";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useSearchParams
+} from "react-router-dom";
+import AdminApp from "./admin/AdminApp";
+import LoginSignUpModal from "./components/modals/LoginSignUpModal";
 import { PublicLayout } from "./components/ui";
-import { ActorPage, ActorsPage, FavoritesPage, GenrePage, HomePage, LogoutPage, MoviesByGenrePage, SearchPage } from './pages';
-import MoviePage from './pages/MoviePage';
+import {
+  ActorPage,
+  ActorsPage,
+  FavoritesPage,
+  GenrePage,
+  HomePage,
+  LogoutPage,
+  MoviesByGenrePage,
+  SearchPage
+} from "./pages";
+import MoviePage from "./pages/MoviePage";
 
 const App = () => {
   const [sp] = useSearchParams();
   const { pathname } = useLocation();
 
   const lsuModalOpen = useMemo(() => {
-    return sp.has('l') || sp.has('s');
+    return sp.has("l") || sp.has("s");
   }, [sp]);
 
   useEffect(() => {
-    if (!pathname.includes('/cm')) require('./index.scss');
-    else require('./admin/admin.scss');
+    if (!pathname.includes("/cm")) require("./index.scss");
+    else require("./admin/admin.scss");
   }, [pathname]);
 
   return (
     <>
       <Toaster />
-      { lsuModalOpen && <LoginSignUpModal key="lsu-modal" /> }
+      {lsuModalOpen && <LoginSignUpModal key="lsu-modal" />}
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<PublicLayout />}>

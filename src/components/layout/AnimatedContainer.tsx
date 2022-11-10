@@ -82,7 +82,7 @@ type FeaturedMovieProps = {
   image: string;
 };
 
-export const FeaturedMovie = styled.div<FeaturedMovieProps>`
+export const FeaturedMovie = styled(motion.div)<FeaturedMovieProps>`
   position: absolute;
   top: 0;
   left: ${SIDEBAR_WIDTH}px;

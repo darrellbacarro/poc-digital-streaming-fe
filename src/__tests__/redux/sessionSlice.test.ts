@@ -1,8 +1,14 @@
-import { doLogin, doLogout, sessionReducer as reducer } from "../../redux/slices";
+import {
+  doLogin,
+  doLogout,
+  sessionReducer as reducer
+} from "../../redux/slices";
 
 describe("session reducer", () => {
   test("should return the initial state", () => {
-    expect(reducer({ token: null, userData: null }, { type: undefined })).toEqual({
+    expect(
+      reducer({ token: null, userData: null }, { type: undefined })
+    ).toEqual({
       token: null,
       userData: null,
     });
@@ -12,8 +18,7 @@ describe("session reducer", () => {
     const payload = {
       success: true,
       data: {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjlkNmNlYmIyNTNlNTYxNzZhNDY2YSIsImVtYWlsIjoiYWRtaW5AZW1haWwuY29tIiwiaWF0IjoxNjY3OTIxNzc3LCJleHAiOjE2Njc5NDMzNzd9.uY901xWS0sQY3m6Ee8v1mupS0Og1kgN11Vj7jqRsHnI",
+        token: "token",
         user: {
           id: "6369d6cebb253e56176a466a",
           email: "admin@email.com",
@@ -26,7 +31,10 @@ describe("session reducer", () => {
       message: "Login successful",
     };
 
-    const action = doLogin.fulfilled(payload, "requestId", { email: "", password: "" });
+    const action = doLogin.fulfilled(payload, "requestId", {
+      email: "",
+      password: "",
+    });
 
     expect(reducer({}, action)).toEqual({
       token: payload.data.token,

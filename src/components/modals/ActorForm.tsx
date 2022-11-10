@@ -1,10 +1,6 @@
 import {
   Button,
-  Dialog,
-  FileCard,
-  FileRejection,
-  FileUploader,
-  MimeType, SelectField, TextareaField,
+  Dialog, SelectField, TextareaField,
   TextInputField,
   toaster
 } from "evergreen-ui";
@@ -13,6 +9,7 @@ import { cloneElement, FC, useCallback, useEffect, useState } from "react";
 import { useAppDispatch } from "../../hooks/redux.hook";
 import { Actor } from "../../redux/models";
 import { doCreateActor, doUpdateActor } from "../../redux/slices";
+import CustomFileInput from "../input/CustomFileInput";
 
 type ActorFormProps = {
   children: any;
@@ -40,16 +37,6 @@ const ActorForm: FC<ActorFormProps> = ({
   const dispatch = useAppDispatch();
 
   const [files, setFiles] = useState<File[]>([]);
-  const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
-  const handleChange = useCallback((files: File[]) => setFiles([files[0]]), []);
-  const handleRejected = useCallback(
-    (fileRejections: FileRejection[]) => setFileRejections([fileRejections[0]]),
-    []
-  );
-  const handleRemove = useCallback(() => {
-    setFiles([]);
-    setFileRejections([]);
-  }, []);
 
   const handleConfirm = useCallback(async (e: any) => {
     if (typeof e.preventDefault === "function") {
@@ -114,7 +101,7 @@ const ActorForm: FC<ActorFormProps> = ({
               label="First Name"
               placeholder="First Name"
               name="firstname"
-              isInvalid={!!errors.firstname}
+              
               validationMessage={
                 !!errors.firstname && errors.firstname[0].message
               }
@@ -127,7 +114,7 @@ const ActorForm: FC<ActorFormProps> = ({
               label="Last Name"
               placeholder="Last Name"
               name="lastname"
-              isInvalid={!!errors.lastname}
+              
               validationMessage={
                 !!errors.lastname && errors.lastname[0].message
               }
@@ -142,7 +129,7 @@ const ActorForm: FC<ActorFormProps> = ({
               label="Biography"
               placeholder="Biography"
               name="bio"
-              isInvalid={!!errors.bio}
+              
               validationMessage={
                 !!errors.bio && errors.bio[0].message
               }
@@ -156,7 +143,7 @@ const ActorForm: FC<ActorFormProps> = ({
               label="Gender"
               placeholder="Gender"
               name="gender"
-              isInvalid={!!errors.gender}
+              
               validationMessage={
                 !!errors.gender && errors.gender[0].message
               }>
@@ -173,44 +160,18 @@ const ActorForm: FC<ActorFormProps> = ({
               placeholder="Birthdate"
               name="birthdate"
               type="date"
-              isInvalid={!!errors.birthdate}
+              
               validationMessage={
                 !!errors.birthdate && errors.birthdate[0].message
               }
             />
           )}
-          <FileUploader
+          <CustomFileInput
+            onChange={(files) => setFiles(files)}
             label="Actor Photo"
             description="You can upload 1 file. File can be up to 8 MB."
-            maxSizeInBytes={8 * 1024 ** 2}
             maxFiles={1}
-            acceptedMimeTypes={[
-              MimeType.jpeg,
-              MimeType.png,
-              MimeType.gif,
-              MimeType.svg,
-            ]}
-            onChange={handleChange}
-            onRejected={handleRejected}
-            renderFile={(file) => {
-              const { name, size, type } = file;
-              const fileRejection = fileRejections.find(
-                (fileRejection: any) => fileRejection.file === file
-              );
-              const { message } = fileRejection || {};
-              return (
-                <FileCard
-                  key={name}
-                  isInvalid={fileRejection != null}
-                  name={name}
-                  onRemove={handleRemove}
-                  sizeInBytes={size}
-                  type={type}
-                  validationMessage={message}
-                />
-              );
-            }}
-            values={files}
+            id="actor-photo"
           />
           <Button visibility="hidden">Submit</Button>
         </form>

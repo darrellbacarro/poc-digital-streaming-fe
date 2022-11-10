@@ -91,6 +91,7 @@ export const ContainerHeader = styled.div`
     background-color: rgba(0, 0, 0, 0.85);
     box-shadow: 5px 5px 10px 1px rgb(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
+    z-index: 15;
 
     & ${SearchContainer} {
       background-color: rgba(255, 255, 255, 0.1);

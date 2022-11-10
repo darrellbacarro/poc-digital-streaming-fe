@@ -92,7 +92,7 @@ const GenreForm: FC<GenreFormProps> = ({
               label="Title"
               placeholder="Genre Title"
               name="title"
-              isInvalid={!!errors.title}
+              
               validationMessage={
                 !!errors.title && errors.title[0].message
               }
@@ -105,7 +105,7 @@ const GenreForm: FC<GenreFormProps> = ({
               label="Gradient"
               placeholder="Genre Gradient"
               name="gradient"
-              isInvalid={!!errors.gradient}
+              
               validationMessage={
                 !!errors.gradient && errors.gradient[0].message
               }>

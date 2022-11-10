@@ -2,10 +2,12 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Rating } from "react-simple-star-rating";
 import { ActorGrid } from "../components/actor_thumbnails/ActorGrid";
 import FavoriteButton from "../components/input/FavoriteButton";
 import { AnimatedContainer, FeaturedMovie, FeaturedMovieDetails, InfoCell, MainContent, OtherInfoGridStyled, UIButton, UIButtonBar } from "../components/layout";
 import { Reviews } from "../components/reviews/Reviews";
+import { RATING_STAR_SIZE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/redux.hook";
 import { clearCurrentMovie, clearCurrentMovieReviews, loadMovieInfo, loadMovieReviews } from "../redux/slices";
 import { timeConvert } from "../utils/helpers";
@@ -40,7 +42,7 @@ const MoviePage = () => {
         <div className="sub_details">
           <span>{currentMovie?.release_year}</span>&middot;
           <span>{ timeConvert(currentMovie?.runtime ?? 0) }</span>&middot;
-          <span>{ currentMovie?.rating ?? '-' } <FontAwesomeIcon icon={solid('star')} /></span>
+          <Rating size={20} iconsCount={RATING_STAR_SIZE} initialValue={currentMovie?.rating ?? 0} />
         </div>
         <UIButtonBar>
           <FavoriteButton movieId={currentMovie?.id!} />
@@ -58,15 +60,12 @@ const MoviePage = () => {
         <h3>Other Information</h3>
         <OtherInfoGridStyled>
           <InfoCell title="Release Year" info={currentMovie?.release_year} />
-          <InfoCell title="Budget" info={`\$${(currentMovie?.cost ?? 0).toLocaleString('en-us')}`} />
+          <InfoCell title="Budget" info={`$${(currentMovie?.cost ?? 0).toLocaleString('en-us')}`} />
           <InfoCell title="Audience Rating" info="-" />
           <InfoCell
             title="Review Rating"
             info={
-              <div>
-                <FontAwesomeIcon icon={solid('star')} />
-                <span>{currentMovie?.rating ?? '-'}</span>
-              </div>
+              <Rating size={20} iconsCount={RATING_STAR_SIZE} initialValue={currentMovie?.rating ?? 0} />
             }
           />
           <InfoCell title="Runtime" info={timeConvert(currentMovie?.runtime ?? 0)} />

@@ -94,6 +94,7 @@ const ReviewsPage = () => {
       render: (value: boolean, data: Review) => {
         return (
           <Select
+            data-testid="approval-select"
             defaultValue={value ? "APPROVED" : "PENDING"}
             onChange={(e) => handleQuickUpdate(data._id, e.target.value)}
             height={24}

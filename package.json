@@ -41,8 +41,9 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "test": "react-app-rewired test --coverage --watchAll",
+    "eject": "react-scripts eject",
+    "deploy": "docker build -t poc-fe . && docker -d --name poc-fe run -p 80:80 poc-fe"
   },
   "eslintConfig": {
     "extends": [
@@ -68,6 +69,7 @@
     "@types/": "closeio/use-infinite-scroll",
     "@types/lodash": "^4.14.188",
     "customize-cra": "^1.0.0",
+    "mockdate": "^3.0.5",
     "msw": "^0.48.0",
     "react-app-rewired": "^2.2.1",
     "sass": "^1.55.0"

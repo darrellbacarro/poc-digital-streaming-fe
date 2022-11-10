@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 import { FC, ReactNode, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +8,7 @@ type ThumbnailItemProps = {
   pathId?: string;
 };
 
-export const ThumbnailItemStyled = styled.div<ThumbnailItemProps>`
+export const ThumbnailItemStyled = styled(motion.div)<ThumbnailItemProps>`
   position: relative;
   display: block;
   flex: 1 1 0px;

@@ -33,4 +33,12 @@ global.matchMedia = global.matchMedia || function() {
   }
 }
 
+global.console = {
+  ...global.console,
+  log: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
+  debug: jest.fn(),
+};
+
 window.crypto = crypto;

@@ -1,23 +1,31 @@
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import FavoriteButton from '../components/input/FavoriteButton';
-import { AnimatedContainer, FeaturedMovie, FeaturedMovieDetails, SizedBox, UIButton, UIButtonBar } from "../components/layout";
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Rating } from "react-simple-star-rating";
+import FavoriteButton from "../components/input/FavoriteButton";
+import {
+  AnimatedContainer,
+  FeaturedMovie,
+  FeaturedMovieDetails,
+  SizedBox,
+  UIButton,
+  UIButtonBar
+} from "../components/layout";
 import { ThumbnailRow } from "../components/movie_thumbnails";
-import MovieItem from '../components/movie_thumbnails/MovieItem';
-import { SIDEBAR_WIDTH } from "../constants";
-import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
-import { publicLoadMovies } from '../redux/slices';
-import { sliceIntoChunks, timeConvert } from '../utils/helpers';
+import MovieItem from "../components/movie_thumbnails/MovieItem";
+import { RATING_STAR_SIZE, SIDEBAR_WIDTH } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks/redux.hook";
+import { publicLoadMovies } from "../redux/slices";
+import { sliceIntoChunks, timeConvert } from "../utils/helpers";
 
 const HomePage = () => {
-  const { movies, featured } = useAppSelector(state => state.public);
+  const { movies, featured } = useAppSelector((state) => state.public);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(publicLoadMovies({ page: 1, limit: 50 }))
+    dispatch(publicLoadMovies({ page: 1, limit: 50 }));
   }, [dispatch]);
 
   const items = useMemo(() => {
@@ -26,33 +34,39 @@ const HomePage = () => {
 
   return (
     <AnimatedContainer relative>
-      <FeaturedMovie image={featured?.backdrop ?? ''} />
+      <FeaturedMovie image={featured?.backdrop ?? ""} />
       <FeaturedMovieDetails>
-        <h1>{ featured?.title ?? '' }</h1>
+        <h1>{featured?.title ?? ""}</h1>
         <div className="sub_details">
-          <span>{ featured?.release_year }</span>&middot;
-          <span>{ timeConvert(featured?.runtime ?? 0) }</span>&middot;
-          <span>{ featured?.rating ?? '-' } <FontAwesomeIcon icon={solid('star')} /></span>
+          <span>{featured?.release_year}</span>&middot;
+          <span>{timeConvert(featured?.runtime ?? 0)}</span>&middot;
+          <Rating
+            size={20}
+            iconsCount={RATING_STAR_SIZE}
+            initialValue={featured?.rating ?? 0}
+          />
         </div>
-        <p>{ featured?.plot ?? '' }</p>
+        <p>{featured?.plot ?? ""}</p>
         <UIButtonBar>
           <FavoriteButton movieId={featured?.id!} />
           <UIButton onClick={() => navigate(`/browse/${featured?.id}`)}>
-            <FontAwesomeIcon icon={solid('info-circle')} />
+            <FontAwesomeIcon icon={solid("info-circle")} />
             <span>More Details</span>
           </UIButton>
         </UIButtonBar>
       </FeaturedMovieDetails>
-      {
-        items.map((item, index) => (
-          <ThumbnailRow key={index} paddingLeft={SIDEBAR_WIDTH} rowTitle={ index === 0 ? "Latest Movies" : undefined }>
-            { item.map(movie => (
-              <MovieItem key={movie.id} movie={movie} />
-            )) }
-          </ThumbnailRow>
-        ))
-      }
-      <SizedBox height={'56px'} />
+      {items.map((item, index) => (
+        <ThumbnailRow
+          key={index}
+          paddingLeft={SIDEBAR_WIDTH}
+          rowTitle={index === 0 ? "Latest Movies" : undefined}
+        >
+          {item.map((movie) => (
+            <MovieItem key={movie.id} movie={movie} />
+          ))}
+        </ThumbnailRow>
+      ))}
+      <SizedBox height={"56px"} />
     </AnimatedContainer>
   );
 };
