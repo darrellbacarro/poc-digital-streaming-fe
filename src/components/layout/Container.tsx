@@ -19,6 +19,8 @@ export const SideBar = styled.div`
   backdrop-filter: blur(10px);
   border-right: 1px rgb(30, 30, 30) solid;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   padding: 24px 0;
   padding-top: 8px;
@@ -79,6 +81,7 @@ export const ContainerHeader = styled.div`
   left: ${SIDEBAR_WIDTH}px;
   top: 0;
   background-color: transparent;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
   z-index: 11;
   transition: all 300ms;
   display: flex;

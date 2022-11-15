@@ -2,9 +2,9 @@ import dayjs from 'dayjs';
 import { Avatar, Button, DeleteIcon, EditIcon, Heading, Pane, PlusIcon, Text } from 'evergreen-ui';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import ActorDeleteConfirm from '../../components/modals/ActorDeleteConfirm';
-import ActorForm from '../../components/modals/ActorForm';
-import CustomTable, { TableColumnProps, TableControls, TableRowActions } from '../../components/ui/CustomTable';
+import CustomTable, { TableColumnProps, TableControls, TableRowActions } from '../../components/layout/CustomTable';
+import ActorDeleteConfirm from '../../components/modal_forms/ActorDeleteConfirm';
+import ActorForm from '../../components/modal_forms/ActorForm';
 import { DEFAULT_AVATAR, ROWS_PER_PAGE } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hook';
 import { Actor } from '../../redux/models';
@@ -93,7 +93,7 @@ const ActorsPage = () => {
       <TableControls>
         <Heading size={600}>Actors</Heading>
         <ActorForm title='Add Actor' onComplete={handleLoadActors}>
-          <Button iconBefore={PlusIcon} appearance="primary">Add Actor</Button>
+          <Button data-testid="add-actor-btn" iconBefore={PlusIcon} appearance="primary">Add Actor</Button>
         </ActorForm>
       </TableControls>
       <CustomTable

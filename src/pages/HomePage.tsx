@@ -1,60 +1,48 @@
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Rating } from "react-simple-star-rating";
-import FavoriteButton from "../components/input/FavoriteButton";
+import { useEffect, useMemo, useState } from "react";
 import {
-  AnimatedContainer,
-  FeaturedMovie,
-  FeaturedMovieDetails,
-  SizedBox,
-  UIButton,
-  UIButtonBar
+  AnimatedContainer, SizedBox
 } from "../components/layout";
-import { ThumbnailRow } from "../components/movie_thumbnails";
-import MovieItem from "../components/movie_thumbnails/MovieItem";
-import { RATING_STAR_SIZE, SIDEBAR_WIDTH } from "../constants";
-import { useAppDispatch, useAppSelector } from "../hooks/redux.hook";
+import { usePublicLayoutContext } from "../components/layout/PublicLayout";
+import { ThumbnailRow } from "../components/movie";
+import { FeaturedMovie } from "../components/movie/FeaturedMovie";
+import MovieItem from "../components/movie/MovieItem";
+import { SIDEBAR_WIDTH } from "../constants";
+import { usePaginatedSearch } from "../hooks/paginated-search.hook";
+import { useAppSelector } from "../hooks/redux.hook";
+import { Movie } from "../redux/models";
 import { publicLoadMovies } from "../redux/slices";
-import { sliceIntoChunks, timeConvert } from "../utils/helpers";
+import { sliceIntoChunks } from "../utils/helpers";
 
 const HomePage = () => {
+  const { filter, handlePageChange } = usePaginatedSearch(publicLoadMovies, { page: 1, limit: 20 });
   const { movies, featured } = useAppSelector((state) => state.public);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { atBottom, setAtBottom } = usePublicLayoutContext();
+
+  const [movieItems, setMovieItems] = useState<Movie[]>(movies.items);
 
   useEffect(() => {
-    dispatch(publicLoadMovies({ page: 1, limit: 50 }));
-  }, [dispatch]);
+    setMovieItems((prev) => [...prev, ...movies.items]);
+  }, [movies]);
 
   const items = useMemo(() => {
-    return sliceIntoChunks(movies.items, 10);
-  }, [movies]);
+    return sliceIntoChunks(movieItems, 10);
+  }, [movieItems]);
+
+  useEffect(() => {
+    if (atBottom) {
+      const totalPage = Math.ceil(movies.total / 20);
+      const nextPage = (filter.page ?? 1) + 1;
+
+      if (nextPage <= totalPage) {
+        handlePageChange((filter.page ?? 1) + 1);
+        setAtBottom(false);
+      }
+    }
+  }, [atBottom, setAtBottom, filter, handlePageChange]);
 
   return (
     <AnimatedContainer relative>
-      <FeaturedMovie image={featured?.backdrop ?? ""} />
-      <FeaturedMovieDetails>
-        <h1>{featured?.title ?? ""}</h1>
-        <div className="sub_details">
-          <span>{featured?.release_year}</span>&middot;
-          <span>{timeConvert(featured?.runtime ?? 0)}</span>&middot;
-          <Rating
-            size={20}
-            iconsCount={RATING_STAR_SIZE}
-            initialValue={featured?.rating ?? 0}
-          />
-        </div>
-        <p>{featured?.plot ?? ""}</p>
-        <UIButtonBar>
-          <FavoriteButton movieId={featured?.id!} />
-          <UIButton onClick={() => navigate(`/browse/${featured?.id}`)}>
-            <FontAwesomeIcon icon={solid("info-circle")} />
-            <span>More Details</span>
-          </UIButton>
-        </UIButtonBar>
-      </FeaturedMovieDetails>
+      <FeaturedMovie movie={featured!} />
       {items.map((item, index) => (
         <ThumbnailRow
           key={index}

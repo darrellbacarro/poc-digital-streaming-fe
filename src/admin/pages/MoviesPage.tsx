@@ -1,9 +1,9 @@
 import { Avatar, Button, DeleteIcon, EditIcon, Heading, Pane, PlusIcon, Text } from 'evergreen-ui';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import MovieDeleteConfirm from '../../components/modals/MovieDeleteConfirm';
-import MovieForm from '../../components/modals/MovieForm';
-import CustomTable, { TableColumnProps, TableControls, TableRowActions } from '../../components/ui/CustomTable';
+import CustomTable, { TableColumnProps, TableControls, TableRowActions } from '../../components/layout/CustomTable';
+import MovieDeleteConfirm from '../../components/modal_forms/MovieDeleteConfirm';
+import MovieForm from '../../components/modal_forms/MovieForm';
 import { DEFAULT_AVATAR, ROWS_PER_PAGE } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hook';
 import { Genre, Movie } from '../../redux/models';

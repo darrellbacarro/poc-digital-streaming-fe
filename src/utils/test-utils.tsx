@@ -6,7 +6,7 @@ import { render } from "@testing-library/react";
 import React, { PropsWithChildren } from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { PublicLayout } from "../components/ui";
+import PublicLayout from "../components/layout/PublicLayout";
 
 import { AppStore, RootState, setupStore } from "../redux";
 

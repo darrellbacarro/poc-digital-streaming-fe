@@ -29,12 +29,12 @@ export function usePaginatedSearch(
     [setFltr]
   );
 
-  const handleLoad = useCallback((filter: LoadDataFilter) => {
-    dispatch(loader(filter));
-  }, [dispatch]);
+  const handleLoad = useCallback(() => {
+    dispatch(loader(fltr));
+  }, [dispatch, fltr]);
 
   useEffect(() => {
-    handleLoad(fltr);
+    handleLoad();
   }, [fltr]);
 
   return {

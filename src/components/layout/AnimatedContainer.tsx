@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { motion, MotionStyle } from "framer-motion";
 import { FC, forwardRef, ReactNode, UIEvent, useCallback } from 'react';
 import { HEADER_HEIGHT, SIDEBAR_WIDTH } from "../../constants";
-import { usePublicLayoutContext } from "../ui/PublicLayout";
+import { usePublicLayoutContext } from "./PublicLayout";
 
 export const AnimatedDiv = styled(motion.div)`
   padding-top: ${HEADER_HEIGHT + 24}px;
@@ -21,7 +21,7 @@ export enum PageTransition {
 }
 
 type AnimatedContainerProps = {
-  children: ReactNode | ((props: { ref: any }) => ReactNode);
+  children: ReactNode;
   style?: MotionStyle;
   relative?: boolean;
   transition?: PageTransition;
@@ -50,7 +50,7 @@ export const AnimatedContainer = forwardRef<HTMLDivElement, AnimatedContainerPro
   transition = PageTransition.SLIDEFADE,
   layoutId,
 }, ref) => {
-  const { setScrolled } = usePublicLayoutContext();
+  const { setScrolled, setAtBottom } = usePublicLayoutContext();
   
   const handleScroll = useCallback((e: UIEvent<HTMLDivElement>) => {
     if (e.currentTarget.scrollTop > 80) {
@@ -58,7 +58,9 @@ export const AnimatedContainer = forwardRef<HTMLDivElement, AnimatedContainerPro
     } else {
       setScrolled(false);
     }
-  }, [setScrolled]);
+
+    setAtBottom(e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight - 400);
+  }, [setScrolled, setAtBottom]);
 
   return (
     <AnimatedDiv  
@@ -72,72 +74,16 @@ export const AnimatedContainer = forwardRef<HTMLDivElement, AnimatedContainerPro
       {...transitions[transition]}
     >
       {
-        typeof children === 'function' ? children({ ref }) : children
+        children
       }
     </AnimatedDiv>
   );
 });
 
-type FeaturedMovieProps = {
-  image: string;
-};
-
-export const FeaturedMovie = styled(motion.div)<FeaturedMovieProps>`
-  position: absolute;
-  top: 0;
-  left: ${SIDEBAR_WIDTH}px;
-  height: 65vh;
-  width: calc(100vw - ${SIDEBAR_WIDTH}px);
-  background-image: url(${(props) => props.image});
-  background-size: cover;
-
-  &::after {
-    content: '';
-    position: absolute;
-    height: 300px;
-    width: 100vw;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
-    bottom: 0;
-  }
-`;
-
 export const UIButtonBar = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
-`;
-
-export const FeaturedMovieDetails = styled.div`
-  height: 55vh;
-  min-height: 55vh;
-  width: 45vw;
-  margin-left: ${SIDEBAR_WIDTH}px;
-  z-index: 8;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 24px 36px;
-  padding-bottom: 48px;
-
-  & > *:not(div.sub_details) {
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-  }
-
-  & > h1 {
-    margin-bottom: 2px;
-  }
-
-  & div.sub_details {
-    font-size: 16px;
-    display: flex;
-    opacity: 0.8;
-    gap: 8px;
-    margin-top: 4px;
-
-    & + ${UIButtonBar} {
-      margin-top: 16px;
-    }
-  }
 `;
 
 export const UIButton = styled(motion.button)`
@@ -156,6 +102,7 @@ export const UIButton = styled(motion.button)`
   align-items: center;
   gap: 8px;
   justify-content: center;
+  min-width: max-content;
 
   &.no-border {
     border-color: transparent;
@@ -181,10 +128,18 @@ export const UIButton = styled(motion.button)`
   }
 
   &.accent {
-    background-color: #1187d0;
+    background-color: #005C9F;
 
-    &:hover, &:focus, &:active {
-      background-color: #49a5de;
+    &:active {
+      background-color: #0181dd;
+    }
+
+    &.md {
+      padding: 5px 16px;
+      font-weight: 400;
+      border-radius: 3px;
+      align-self: auto;
+      font-size: 14px;
     }
   }
 `;

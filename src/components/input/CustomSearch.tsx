@@ -5,17 +5,19 @@ import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const SearchContainer = styled.div`
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
   border-radius: 5px;
-  transition: background-color 300ms;
+  border: 1px transparent solid;
+  transition: background-color 300ms, border-color 300ms;
 
   &:focus-within {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 1);
+    border-color: rgba(255, 255, 255, 0.5);
   }
 
   & > input[type='text'] {

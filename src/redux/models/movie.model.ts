@@ -20,7 +20,7 @@ export interface Movie {
   id: string;
   title: string;
   poster: string;
-  cost: string;
+  cost: string | number;
   release_year: number;
   rating: number;
   runtime: number;

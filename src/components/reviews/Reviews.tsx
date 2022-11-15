@@ -17,6 +17,7 @@ import { RATING_STAR_SIZE } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.hook";
 import { Review } from "../../redux/models";
 import { doSubmitReview } from "../../redux/slices";
+import { getRandomInt } from "../../utils/helpers";
 import { UIButton, UserAvatar } from "../layout";
 
 const ReviewsSectionStyled = styled.div`
@@ -139,11 +140,11 @@ const ReviewRow: FC<{ review: Review }> = ({ review }) => {
         <ReviewAuthorStyled>
           <UserAvatar
             image={
-              review.user.photo ??
+              review.user?.photo ??
               "https://avatars.dicebear.com/v2/jdenticon/8f4522be6be9ff5677d60f40781399c0.svg"
             }
           />
-          <strong>{review.user.fullname ?? ""}</strong>
+          <strong>{review.user?.fullname ?? ""}</strong>
         </ReviewAuthorStyled>
         <ReviewRatingStyled>
           <FontAwesomeIcon icon={solid("star")} />
@@ -183,12 +184,12 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
 
   const userHasReview = useMemo(() => {
     if (!loggedIn) return false;
-    return items.some((review) => review.user.userId === userData?.id);
+    return items.some((review) => review.user?.userId === userData?.id);
   }, [items, userData, loggedIn]);
 
   const reviewFormWarning = useMemo(() => {
     if (!userData) return "You must be logged in to write a review";
-    if (userData?.role === 'ADMIN') return "Admins cannot write reviews";
+    if (userData?.role === "ADMIN") return "Admins cannot write reviews";
     if (userHasReview) return "You have already written a review";
 
     return null;
@@ -258,16 +259,25 @@ export const Reviews: FC<ReviewsProps> = ({ setFormRef }) => {
                 size={24}
               />
             </div>
+            {process.env.NODE_ENV === "test" && (
+              <button
+                data-testid="rate-btn"
+                onClick={() => setRating(getRandomInt(0, 5))}
+              >
+                Set Rating
+              </button>
+            )}
             <ReviewInputStyled
+              data-testid="review-input"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={7}
               placeholder="Write your review here..."
             />
-            <UIButton>Submit Review</UIButton>
+            <UIButton data-testid="submit-review-btn">Submit Review</UIButton>
           </>
         ) : (
-          <i>{ reviewFormWarning }</i>
+          <i>{reviewFormWarning}</i>
         )}
       </ReviewForm>
     </ReviewsSectionStyled>

@@ -1,9 +1,6 @@
 import { act, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { createMemoryHistory } from "history";
-import { Router } from "react-router-dom";
 import AdminApp from "../admin/AdminApp";
-import App from "../App";
 import { setupStore } from "../redux";
 import {
   doLogin,
@@ -22,7 +19,6 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("Admin App", () => {
-  const history = createMemoryHistory();
   let store: ReturnType<typeof setupStore>;
 
   beforeAll(() => {
@@ -222,7 +218,7 @@ describe("Admin App", () => {
     expect(screen.getByText(/Edit User/i)).toBeInTheDocument();
   });
 
-  test("should validate user form fields", async () => {
+  test("should validate user form fields, successful registration", async () => {
     renderWithProviders(
       withRouter(AdminApp, { path: "/cm/*", route: "/cm/users" }),
       { store }
@@ -296,7 +292,7 @@ describe("Admin App", () => {
 
   test("should validate movie form required fields", async () => {
     renderWithProviders(
-      withRouter(AdminApp, { path: "/cm/*", route: "/cm/movies" }),
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/movies" })
     );
 
     expect(screen.getAllByText(/Movies/i).length).toBeGreaterThan(0);
@@ -315,11 +311,8 @@ describe("Admin App", () => {
   });
 
   test("should open movie edit form on click", async () => {
-    history.replace("/cm/movies");
-    const { store } = renderWithProviders(
-      <Router location={history.location} navigator={history}>
-        <App />
-      </Router>
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/movies" })
     );
 
     await act(async () => {
@@ -333,5 +326,157 @@ describe("Admin App", () => {
       userEvent.click(screen.getAllByText(/Edit/i)[0]);
     });
     expect(screen.getByText(/Edit Movie/i)).toBeInTheDocument();
+  });
+
+  test("should validate actor form required fields", async () => {
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/actors" })
+    );
+
+    expect(screen.getAllByText(/Actors/i).length).toBeGreaterThan(0);
+    const btn = screen.getByTestId("add-actor-btn");
+
+    await act(async () => {
+      userEvent.click(btn);
+    });
+    const submitBtn = screen.getByTestId("actor-form-submit");
+
+    await act(async () => {
+      userEvent.click(submitBtn);
+    });
+
+    expect(screen.getAllByText(/is required/).length).toBeGreaterThan(0);
+  });
+
+  test("should open actor edit form on click", async () => {
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/actors" })
+    );
+
+    await act(async () => {
+      await store.dispatch(loadActors());
+    });
+
+    expect(store.getState().admin.actors.items.length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Edit/i).length).toBeGreaterThan(0);
+
+    await act(async () => {
+      userEvent.click(screen.getAllByText(/Edit/i)[0]);
+    });
+    expect(screen.getByText(/Edit Actor/i)).toBeInTheDocument();
+  });
+
+  test("should create actor when all required fields are filled", async () => {
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/actors" })
+    );
+
+    expect(screen.getAllByText(/Actors/i).length).toBeGreaterThan(0);
+    const btn = screen.getByTestId("add-actor-btn");
+
+    await act(async () => {
+      userEvent.click(btn);
+    });
+
+    const photo = screen
+      .getByTestId("actor-photo")
+      .querySelector("input") as Element;
+
+    await act(async () => {
+      userEvent.type(screen.getByLabelText("First Name"), "John");
+      userEvent.type(screen.getByLabelText("Last Name"), "Doe");
+      userEvent.type(screen.getByLabelText("Biography"), "Lorem ipsum");
+      userEvent.type(screen.getByLabelText("Birthdate"), "2000-01-01");
+      fireEvent.change(photo, {
+        target: {
+          files: [
+            new File(["(⌐□_□)"], "chucknorris.png", { type: "image/png" }),
+          ],
+        },
+      });
+
+      userEvent.click(screen.getByTestId("actor-form-submit"));
+    });
+
+    expect(screen.getAllByText(/Successful request/).length).toBeGreaterThan(0);
+  });
+
+  test("should create movie when all required fields are filled", async () => {
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/movies" })
+    );
+
+    expect(screen.getAllByText(/Movies/i).length).toBeGreaterThan(0);
+    const btn = screen.getByTestId("add-movie-btn");
+
+    await act(async () => {
+      userEvent.click(btn);
+    });
+
+    const filePayload = {
+      target: {
+        files: [
+          new File(["(⌐□_□)"], "chucknorris.png", { type: "image/png" }),
+        ],
+      },
+    };
+
+    const poster = screen.getByTestId('poster').querySelector('input[type="file"]') as Element;
+    const backdrop = screen.getByTestId('backdrop').querySelector('input[type="file"]') as Element;
+
+    await act(async () => {
+      userEvent.type(screen.getByLabelText("Title"), "Movie 1");
+      userEvent.type(screen.getByLabelText("Plot"), "Movie Plot");
+      userEvent.type(screen.getByLabelText("Runtime"), "120");
+      userEvent.type(screen.getByLabelText("Cost"), "100000");
+      userEvent.type(screen.getByLabelText("Release Year"), "2000");
+      fireEvent.change(poster, filePayload);
+      fireEvent.change(backdrop, filePayload);
+
+      userEvent.click(screen.getByTestId("movie-form-submit"));
+    });
+
+    expect(screen.getAllByText(/Successful request/).length).toBeGreaterThan(0);
+  });
+
+  test("should create genre when all required fields are filled", async () => {
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/genres" }),
+      { store }
+    );
+
+    expect(screen.getAllByText(/Movies/i).length).toBeGreaterThan(0);
+    const btn = screen.getByTestId("add-genre-btn");
+
+    await act(async () => {
+      userEvent.click(btn);
+    });
+
+    await act(async () => {
+      userEvent.type(screen.getByLabelText("Title"), "Genre 1");
+      userEvent.selectOptions(screen.getByLabelText(/Gradient/), ["spiky-naga"], { bubbles: true });
+      userEvent.click(screen.getByTestId("genre-form-submit"));
+    });
+
+    expect(screen.getAllByText(/Successful request/).length).toBeGreaterThan(0);
+  });
+
+  test("should open genre edit form on click", async () => {
+    await act(async () => {
+      await store.dispatch(loadGenres());
+    });
+
+    renderWithProviders(
+      withRouter(AdminApp, { path: "/cm/*", route: "/cm/genres" }),
+      { store }
+    );
+
+    expect(store.getState().admin.genres.items.length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Edit/i).length).toBeGreaterThan(0);
+
+    await act(async () => {
+      userEvent.click(screen.getAllByText(/Edit/i)[0]);
+    });
+    expect(screen.getByText(/Edit Genre/i)).toBeInTheDocument();
   });
 });

@@ -8,13 +8,13 @@ import {
   toaster
 } from "evergreen-ui";
 import { useCallback, useMemo } from "react";
-import GenreDeleteConfirm from "../../components/modals/GenreDeleteConfirm";
-import GenreForm from "../../components/modals/GenreForm";
 import CustomTable, {
   TableColumnProps,
   TableControls,
   TableRowActions
-} from "../../components/ui/CustomTable";
+} from "../../components/layout/CustomTable";
+import GenreDeleteConfirm from "../../components/modal_forms/GenreDeleteConfirm";
+import GenreForm from "../../components/modal_forms/GenreForm";
 import { usePaginatedSearch } from "../../hooks/paginated-search.hook";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.hook";
 import { Genre } from "../../redux/models";
@@ -79,7 +79,7 @@ const GenresPage = () => {
             <GenreForm
               genre={data}
               title="Edit Genre"
-              onComplete={() => handleLoad(filter)}
+              onComplete={handleLoad}
             >
               <Button iconBefore={EditIcon} appearance="minimal" size="small">
                 Edit
@@ -87,7 +87,7 @@ const GenresPage = () => {
             </GenreForm>
             <GenreDeleteConfirm
               genre={data}
-              onComplete={() => handleLoad(filter)}
+              onComplete={handleLoad}
             >
               <Button
                 iconBefore={DeleteIcon}
@@ -109,8 +109,8 @@ const GenresPage = () => {
     <>
       <TableControls>
         <Heading size={600}>Genres</Heading>
-        <GenreForm title="Add Genre" onComplete={() => handleLoad(filter)}>
-          <Button iconBefore={PlusIcon} appearance="primary">
+        <GenreForm title="Add Genre" onComplete={handleLoad}>
+          <Button data-testid="add-genre-btn" iconBefore={PlusIcon} appearance="primary">
             Add Genre
           </Button>
         </GenreForm>

@@ -105,7 +105,6 @@ const GenreForm: FC<GenreFormProps> = ({
               label="Gradient"
               placeholder="Genre Gradient"
               name="gradient"
-              
               validationMessage={
                 !!errors.gradient && errors.gradient[0].message
               }>
@@ -116,7 +115,7 @@ const GenreForm: FC<GenreFormProps> = ({
               <option value="jungle-day">Jungle Day</option>
             </SelectField>
           )}
-          <Button visibility="hidden">Submit</Button>
+          <Button data-testid="genre-form-submit" visibility="hidden">Submit</Button>
         </form>
       </Dialog>
       {cloneElement(children, {

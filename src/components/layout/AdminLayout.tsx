@@ -3,10 +3,10 @@ import { Button, CommentIcon, FilmIcon, GridViewIcon, IconComponent, LogOutIcon,
 import { motion } from "framer-motion";
 import { FC, useCallback, useEffect } from "react";
 import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { UserAvatar, UserAvatarContainer } from ".";
 import logo from '../../assets/images/logo.png';
 import { DEFAULT_AVATAR } from "../../constants";
 import { useAppSelector } from "../../hooks/redux.hook";
-import { UserAvatar, UserAvatarContainer } from "../layout";
 
 const AdminLayoutStyled = styled(motion.div)`
   display: grid;
@@ -16,9 +16,12 @@ const AdminLayoutStyled = styled(motion.div)`
   grid-template-columns: 225px 1fr;
   grid-template-rows: 64px 1fr;
   column-gap: 16px;
-  box-sizing: border-box;
   padding: 0;
   margin: 0;
+
+  &, & * {
+    box-sizing: border-box;
+  }
 `;
 
 const AdminLayoutHeaderStyled = styled.div`

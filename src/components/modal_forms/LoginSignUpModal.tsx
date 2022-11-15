@@ -24,21 +24,21 @@ import FormInput, { FormFooterStyled, FormStyled } from "../input/FormInput";
 import { UIButton } from "../layout";
 import { ModalBackdrop } from "./ModalBackdrop";
 
-const ModalStyled = styled(motion.div)`
+const ModalStyled = styled(motion.div)<{ mode: string }>`
   position: fixed;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #0f0f0f;
-  width: 30vw;
+  width: 420px;
   height: min-content;
   border-radius: 10px;
   box-sizing: border-box;
   padding: 16px;
   z-index: 21;
   left: 50%;
-  top: 10%;
-  margin-left: -15vw;
+  top: ${({ mode }) => (mode === "Log In" ? "10%" : "2%")};
+  margin-left: -210px;
   box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.5);
 `;
 
@@ -293,7 +293,7 @@ const LoginSignUpModal = () => {
   return (
     <>
       <ModalBackdrop onClick={handleClose} />
-      <ModalStyled {...animation}>
+      <ModalStyled mode={mode} {...animation}>
         <img src={logo} height={128} alt="Movies Logo" />
         <h2>{mode}</h2>
         {mode === "Log In" ? <LoginForm /> : <SignUpForm />}

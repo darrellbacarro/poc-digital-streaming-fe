@@ -9,8 +9,8 @@ import {
   useSearchParams
 } from "react-router-dom";
 import AdminApp from "./admin/AdminApp";
-import LoginSignUpModal from "./components/modals/LoginSignUpModal";
-import { PublicLayout } from "./components/ui";
+import PublicLayout from "./components/layout/PublicLayout";
+import LoginSignUpModal from "./components/modal_forms/LoginSignUpModal";
 import {
   ActorPage,
   ActorsPage,
@@ -32,8 +32,8 @@ const App = () => {
   }, [sp]);
 
   useEffect(() => {
-    if (!pathname.includes("/cm")) require("./index.scss");
-    else require("./admin/admin.scss");
+    if (!pathname.includes("/cm")) require("./stylesheets/index.scss");
+    else require("./stylesheets/admin.scss");
   }, [pathname]);
 
   return (

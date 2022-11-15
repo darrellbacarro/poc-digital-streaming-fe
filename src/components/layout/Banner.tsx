@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import actorsBg from '../../assets/images/actorsBg.svg';
 import favoritesBg from '../../assets/images/favoritesBg.svg';
 import genresBg from '../../assets/images/genresBg.svg';
-import { SIDEBAR_WIDTH } from '../../constants';
 
 const JUMBOTRON_BACKGROUNDS = {
   actor: actorsBg,
@@ -18,9 +17,9 @@ type JumbotronProps = {
 export const Jumbotron = styled.div<JumbotronProps>`
   position: absolute;
   top: 0;
-  left: ${SIDEBAR_WIDTH}px;
+  left: 0;
   height: ${(props) => props.height ?? 200}px;
-  width: calc(100vw - ${SIDEBAR_WIDTH}px);
+  width: 100vw;
   background-color: orange;
   background-image: url(${(props) => JUMBOTRON_BACKGROUNDS[props.bg]});
   background-size: cover;

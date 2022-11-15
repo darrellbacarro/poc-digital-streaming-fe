@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Toaster } from 'react-hot-toast';
 import { Router } from 'react-router-dom';
-import { LoginForm } from "../components/modals/LoginSignUpModal";
+import { LoginForm } from "../components/modal_forms/LoginSignUpModal";
 import { renderWithProviders } from "../utils/test-utils";
 
 describe("Login Form", () => {

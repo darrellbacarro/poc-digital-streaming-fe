@@ -61,9 +61,9 @@ describe("HomePage", () => {
     expect(session.userData).not.toBeNull();
     expect(session.token).not.toBeNull();
     expect(session.userData?.role).toBe('ADMIN');
-    expect(screen.getByText(/Admin Console/)).toBeInTheDocument();
+    expect(screen.getByTestId(/Content Management/)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText(/Admin Console/));
+    fireEvent.click(screen.getByTestId(/Content Management/));
     expect(history.location.pathname).toBe('/cm');
 
     await act(async () => {

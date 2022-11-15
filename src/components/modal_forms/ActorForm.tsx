@@ -173,7 +173,7 @@ const ActorForm: FC<ActorFormProps> = ({
             maxFiles={1}
             id="actor-photo"
           />
-          <Button visibility="hidden">Submit</Button>
+          <Button data-testid="actor-form-submit" visibility="hidden">Submit</Button>
         </form>
       </Dialog>
       {cloneElement(children, {

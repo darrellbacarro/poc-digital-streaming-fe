@@ -1,7 +1,7 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://192.168.1.4:3000";
 
 export const server = setupServer(
   rest.get(`${BASE_URL}/movies`, (req, res, ctx) => {
@@ -313,6 +313,30 @@ export const server = setupServer(
       })
     );
   }),
+  rest.get(`${BASE_URL}/movies/:id/reviews`, async (req, res, ctx) => {
+    return res(
+      ctx.json({
+        success: true,
+        message: "Review retrieved successfully!",
+        data: {
+          total: 1,
+          items: [
+            {
+              _id: '6368c3522bc63fa1e1b4cc66',
+              content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+              rating: 4.5,
+              approved: true,
+              user: {
+                fullname: 'User 1',
+                userId: '636801c301a37899c5a6e33a'
+              },
+              postedAt: '2022-11-07T08:35:30.557Z'
+            }
+          ]
+        },
+      })
+    );
+  }),
   rest.get(`${BASE_URL}/reviews`, async (req, res, ctx) => {
     return res(
       ctx.json({
@@ -426,3 +450,48 @@ export const server = setupServer(
     );
   }),
 );
+
+
+export const moviePageData = {
+  currentMovie: {
+    id: '6368a413dcd1a9dc620a3c4c',
+    title: 'The Purge: Election Year',
+    poster: 'https://image.tmdb.org/t/p/original/dx5pKJpGbJc9xrFQ8UR1XrrqmPj.jpg',
+    cost: 10000000,
+    release_year: 2016,
+    rating: 4.5,
+    runtime: 105,
+    plot: 'Two years after choosing not to kill the man who killed his son, former police sergeant Leo Barnes has become head of security for Senator Charlene Roan, the front runner in the next Presidential election due to her vow to eliminate the Purge. On the night of what should be the final Purge, a betrayal from within the government forces Barnes and Roan out onto the street where they must fight to survive the night.',
+    backdrop: 'https://image.tmdb.org/t/p/original/a7V3ZXCDAk3P7GjpgfN0IInjh0r.jpg',
+    genres: [
+      {
+        id: '63684b11ef05a840a058d1f7',
+        title: 'Horror',
+        gradient: 'aqua-splash'
+      }
+    ],
+    actors: [
+      {
+        actorId: '63687338dcd1a9dc620a3bbf',
+        name: 'Tom Holland',
+        photo: 'https://image.tmdb.org/t/p/w780/bBRlrpJm9XkNSg0YT5LCaxqoFMX.jpg'
+      }
+    ]
+  },
+  currentMovieReviews: {
+    total: 1,
+    items: [
+      {
+        _id: '6368c3522bc63fa1e1b4cc66',
+        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        rating: 4.5,
+        approved: true,
+        user: {
+          fullname: 'User 1',
+          userId: '636801c301a37899c5a6e33a'
+        },
+        postedAt: '2022-11-07T08:35:30.557Z'
+      }
+    ]
+  },
+};

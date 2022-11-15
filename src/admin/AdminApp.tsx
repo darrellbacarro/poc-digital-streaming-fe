@@ -2,7 +2,7 @@ import { Pane } from 'evergreen-ui';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import AdminLayout from '../components/ui/AdminLayout';
+import AdminLayout from '../components/layout/AdminLayout';
 import { useAppSelector } from '../hooks/redux.hook';
 import ActorsPage from './pages/ActorsPage';
 import GenresPage from './pages/GenresPage';

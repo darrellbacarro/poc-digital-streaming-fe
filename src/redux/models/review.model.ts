@@ -7,7 +7,7 @@ export interface Review {
   rating: number;
   approved: boolean;
   postedAt: string;
-  user: Partial<User>;
-  movie: Partial<Movie>;
+  user?: Partial<User>;
+  movie?: Partial<Movie>;
   [key: string]: any;
 }

@@ -2,8 +2,8 @@ import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedContainer, MainContent, SizedBox } from "../components/layout";
 import { Jumbotron } from "../components/layout/Banner";
-import { ThumbnailRow } from "../components/movie_thumbnails";
-import MovieItem from "../components/movie_thumbnails/MovieItem";
+import { ThumbnailRow } from "../components/movie";
+import MovieItem from "../components/movie/MovieItem";
 import { SIDEBAR_WIDTH } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/redux.hook";
 import { Movie } from "../redux/models";
@@ -37,7 +37,7 @@ const FavoritesPage = () => {
         items.map((item, index) => (
           <ThumbnailRow key={index} paddingLeft={SIDEBAR_WIDTH}>
             { item.map((movie: Movie) => (
-              <MovieItem key={movie.id} movie={movie} />
+              <MovieItem key={movie._id} movie={movie} />
             )) }
           </ThumbnailRow>
         ))

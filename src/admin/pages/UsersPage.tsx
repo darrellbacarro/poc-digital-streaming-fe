@@ -11,13 +11,13 @@ import {
   toaster
 } from "evergreen-ui";
 import { useCallback, useMemo } from "react";
-import UserDeleteConfirm from "../../components/modals/UserDeleteConfirm";
-import UserForm from "../../components/modals/UserForm";
 import CustomTable, {
   TableColumnProps,
   TableControls,
   TableRowActions
-} from "../../components/ui/CustomTable";
+} from "../../components/layout/CustomTable";
+import UserDeleteConfirm from "../../components/modal_forms/UserDeleteConfirm";
+import UserForm from "../../components/modal_forms/UserForm";
 import { DEFAULT_AVATAR } from "../../constants";
 import { usePaginatedSearch } from "../../hooks/paginated-search.hook";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.hook";
@@ -39,12 +39,12 @@ const UsersPage = () => {
         if (!ret.success) throw new Error(ret.message);
 
         toaster.success(ret.message, { duration: 1 });
-        dispatch(loadUsers(filter));
+        handleLoad();
       } catch (e: any) {
         toaster.danger(e?.message ?? e);
       }
     },
-    [filter, dispatch]
+    []
   );
 
   const cols = useMemo(
@@ -116,7 +116,7 @@ const UsersPage = () => {
             <UserForm
               user={data}
               title="Edit User"
-              onComplete={() => handleLoad(filter)}
+              onComplete={handleLoad}
             >
               <Button
                 data-testid="edit-btn"
@@ -129,7 +129,7 @@ const UsersPage = () => {
             </UserForm>
             <UserDeleteConfirm
               user={data}
-              onComplete={() => handleLoad(filter)}
+              onComplete={handleLoad}
             >
               <Button
                 disabled={session?.userData?.id === data.id}
@@ -152,7 +152,7 @@ const UsersPage = () => {
     <>
       <TableControls>
         <Heading size={600}>Users</Heading>
-        <UserForm title="Add User" onComplete={() => handleLoad(filter)}>
+        <UserForm title="Add User" onComplete={handleLoad}>
           <Button
             data-testid="add-user-btn"
             iconBefore={PlusIcon}

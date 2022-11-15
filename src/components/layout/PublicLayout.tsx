@@ -1,14 +1,14 @@
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { matchPath, Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import logo from '../../assets/images/logo.png';
 import { DEFAULT_AVATAR } from '../../constants';
-import { useHistoryStack } from '../../hooks/history.hook';
 import { useAppSelector } from '../../hooks/redux.hook';
 import CustomSearch from '../input/CustomSearch';
-import { Container, ContainerHeader, HeaderButton, HeaderControlsContainer, UserAvatar, UserAvatarContainer } from '../layout';
+import { Container, ContainerHeader, HeaderControlsContainer, SideBar, SizedBox, UIButton, UserAvatar, UserAvatarContainer } from '../layout';
+import { IconNavLink } from './IconNavLink';
 
 type SidebarItemData = {
   icon: IconDefinition;
@@ -30,13 +30,13 @@ const sidebarItems: (SidebarItemData | null)[] = [
     to: '/favorites',
   },
   {
-    icon: solid('users-viewfinder'),
+    icon: solid('user-astronaut'),
     label: 'Actors',
     to: '/actors',
     extraPath: '/actors/:id'
   },
   {
-    icon: solid('ticket'),
+    icon: solid('masks-theater'),
     label: 'Genres',
     to: '/genres',
     extraPath: '/genres/:id'
@@ -46,12 +46,14 @@ const sidebarItems: (SidebarItemData | null)[] = [
 
 type PublicLayoutContext = {
   setScrolled: (scrolled: boolean) => void;
+  setAtBottom: (atBottom: boolean) => void;
+  atBottom: boolean;
 };
 
 const PublicLayout = () => {
   const { pathname } = useLocation();
-  const historyStack = useHistoryStack();
   const [scrolled, setScrolled] = useState(false);
+  const [atBottom, setAtBottom] = useState(false);
   const { token, userData } = useAppSelector(state => state.session);
   const navigate = useNavigate();
 
@@ -69,8 +71,8 @@ const PublicLayout = () => {
 
   return (
     <Container>
-      {/* <SideBar>
-        <Logo width={150} height={60} />
+      <SideBar>
+        <img src={logo} width={42} alt="Logo" />
         {
           sidebarItems.map((item, index) => {
             if (item === null) return <SizedBox key={index} />;
@@ -82,57 +84,41 @@ const PublicLayout = () => {
             const extraPathMatch = item.extraPath && matchPath(item.extraPath, pathname);
 
             const active = mainPathMatch || extraPathMatch;
-              
+
             return (
-              <SideBarItem key={item.to} className={clsx({ active })} to={item.to}>
-                <div><FontAwesomeIcon icon={item.icon} /></div>
-                <div>{ item.label }</div>
-              </SideBarItem>
+              <IconNavLink to={item.to} active={!!active} key={item.to} label={item.label} icon={item.icon} />
             );
           })
         }
         {
           loggedIn && (
-            <SideBarItem to='/logout'>
-              <div><FontAwesomeIcon icon={solid('right-from-bracket')} /></div>
-              <div>Log Out</div>
-            </SideBarItem>
-          )
-        }
-        {
-          !loggedIn && (
-            <UIButton onClick={openLSUModal} className='accent single no-border'>
-              <FontAwesomeIcon icon={solid('right-to-bracket')} />
-              <span>Log In or Sign Up</span>
-            </UIButton>
+            <IconNavLink to="/logout" icon={solid('right-from-bracket')} label="Log Out" />
           )
         }
         {
           userData?.role === 'ADMIN' && (
-            <SideBarItem className='special' key={'/cm'} to={'/cm'}>
-              <div><FontAwesomeIcon icon={solid('laptop-code')} /></div>
-              <div>Admin Console</div>
-            </SideBarItem>
+            <IconNavLink className='special' to="/cm" icon={solid('laptop-code')} label="Content Management" />
           )
         }
-      </SideBar> */}
+      </SideBar>
       <ContainerHeader className={clsx({ solid: scrolled })}>
         <HeaderControlsContainer>
-          {
-            historyStack.length > 0 && (
-              <HeaderButton onClick={() => navigate(-1)}>
-                <FontAwesomeIcon icon={solid('arrow-left')} />
-              </HeaderButton>
-            )
-          }
           <CustomSearch />
         </HeaderControlsContainer>
-        <UserAvatarContainer>
-          <span>{ userData?.fullname ?? 'Guest' }</span>
-          <UserAvatar image={userData?.photo ?? DEFAULT_AVATAR} />
-        </UserAvatarContainer>
+        {
+          loggedIn ? (
+            <UserAvatarContainer>
+              <span>{ userData?.fullname ?? 'Guest' }</span>
+              <UserAvatar image={userData?.photo ?? DEFAULT_AVATAR} />
+            </UserAvatarContainer>
+          ) : (
+            <UIButton
+              onClick={openLSUModal}
+              className={clsx('accent', 'no-border', 'md')}>Log In</UIButton>
+          )
+        }
       </ContainerHeader>
-      <Outlet context={{ setScrolled }} />
+      <Outlet context={{ setScrolled, atBottom, setAtBottom }} />
     </Container>
   );
 };

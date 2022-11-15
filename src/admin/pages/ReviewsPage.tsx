@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { Avatar, Heading, Pane, Select, Text, toaster } from 'evergreen-ui';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import CustomTable, { TableColumnProps, TableControls } from '../../components/ui/CustomTable';
+import CustomTable, { TableColumnProps, TableControls } from '../../components/layout/CustomTable';
 import { DEFAULT_AVATAR, ROWS_PER_PAGE } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hook';
 import { Movie, Review, User } from '../../redux/models';

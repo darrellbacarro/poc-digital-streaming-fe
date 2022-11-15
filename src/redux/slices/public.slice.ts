@@ -164,8 +164,10 @@ export const publicSlice = createSlice({
     });
     builder.addCase(publicLoadMovies.fulfilled, (state, action) => {
       const { items, total } = action.payload;
+      if (state.movies.items.length === 0 && !!items) {
+        state.featured = items[getRandomInt(0, items.length - 1)];
+      }
       state.movies = { items, total };
-      state.featured = items[getRandomInt(0, items.length - 1)];
     });
     builder.addCase(loadMovieInfo.fulfilled, (state, action) => {
       state.currentMovie = action.payload;
